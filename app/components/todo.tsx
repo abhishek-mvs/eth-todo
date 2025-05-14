@@ -11,6 +11,23 @@ interface Todo {
 }
 
 const CONTRACT_ADDRESS = '0x8d80F85742d729D00C283A2C492980ea28A7c811'; // Replace with your contract address
+const BMS_URL = 'https://bmsurl.co/BMSTNY/CFL0tjALkm'
+
+async function resolveShortUrl(shortUrl: string): Promise<string | null> {
+  try {
+    const response = await fetch(shortUrl, {
+      method: 'HEAD',
+      redirect: 'follow'
+    });
+    
+    // Get the final URL after all redirects
+    const finalUrl = response.url;
+    return finalUrl;
+  } catch (error) {
+    console.error('Error resolving short URL:', error);
+    return null;
+  }
+}
 
 export default function Todo() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -133,6 +150,10 @@ export default function Todo() {
 
   useEffect(() => {
     getTodos();
+    // Resolve and log the BMS URL
+    resolveShortUrl(BMS_URL).then(finalUrl => {
+      console.log('Resolved BMS URL:', finalUrl);
+    });
   }, []);
 
   useEffect(() => {
